@@ -28,7 +28,9 @@ const [toggleState, setToggleState] = useState(1);
   return (
       <>
        <div className='w-screen min-h-srceen flex flex-col items-center'>  
-         <div className='w-screen h-srceen bg-bg1 bg-center bg-no-repeat'></div>        
+         <div className='w-screen h-srceen bg-bg1 bg-center bg-no-repeat'>
+           <h1>PUFF</h1>
+         </div>        
        </div>
       </>
   )
