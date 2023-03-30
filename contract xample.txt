@@ -1,0 +1,38 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract MyNFT is ERC721, Ownable {
+    uint256 public maxMintPerWallet = 4;
+    mapping(address => uint256) public walletMintCounts;
+    mapping(address => uint256) public walletMaxMintDate;
+    mapping(address => uint256) public walletSpecialNFTClaimDate;
+
+    constructor(string memory name, string memory symbol) ERC721(name, symbol) {}
+
+    function mint() public {
+        require(walletMintCounts[msg.sender] < maxMintPerWallet, "Max mint per wallet reached");
+
+        _safeMint(msg.sender, totalSupply());
+        walletMintCounts[msg.sender]++;
+
+        if (walletMintCounts[msg.sender] == maxMintPerWallet) {
+            walletMaxMintDate[msg.sender] = block.timestamp;
+            walletSpecialNFTClaimDate[msg.sender] = block.timestamp + 1 years;
+        }
+    }
+
+    function mintSpecialNFT() public {
+        require(walletSpecialNFTClaimDate[msg.sender] != 0, "User has not minted max NFTs in previous phase");
+        require(block.timestamp >= walletSpecialNFTClaimDate[msg.sender], "Special NFT cannot be claimed yet");
+
+        _safeMint(msg.sender, totalSupply());
+    }
+
+    function setMaxMintPerWallet(uint256 maxMint) public onlyOwner {
+        maxMintPerWallet = maxMint;
+    }
+}
+
