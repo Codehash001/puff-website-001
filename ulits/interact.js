@@ -5,7 +5,7 @@ const keccak256 = require('keccak256')
 
 // global BigInt
 
-const web3 = createAlchemyWeb3(process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL)
+const web3 = createAlchemyWeb3('https://eth-sepolia.g.alchemy.com/v2/YtSHYS1BcAFu1PPEY25zMv5cj0R39f-X')
 const contract = require('../artifacts/contracts/Puff.sol/Puff.json')
 const nftContract = new web3.eth.Contract(contract.abi, config.contractAddress)
 
