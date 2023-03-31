@@ -29,7 +29,10 @@ const [toggleState, setToggleState] = useState(1);
       <>
        <div className='w-screen min-h-screen flex flex-col items-center'>  
          <div className='w-screen h-screen bg-bg1 bg-center bg-no-repeat filter brigtness-50'>
-           <h1>PUFF</h1>
+           <div className='flex items-center justify-between filter backdrop-blur-sm bg-black/60 h-[50px] w-full'>
+             <h1 className='text-white font-[18px]'>Home</h1>
+             <h1 className='text-white font-[18px]'>Mint</h1>
+           </div>
          </div>        
        </div>
       </>
