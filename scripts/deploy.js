@@ -1,11 +1,11 @@
 const hre = require('hardhat')
 
-const _initBaseURI='ipfs://bafybeiajl7wr67f2b7aiefrakv2w6quog5sqhf6p3ii5b2euushg3rl5hy/'
+const _initBaseURI='ipfs://ipfsurl/'
 
 async function main() {
 
   // Deploy the contract
-  const contract = await hre.ethers.getContractFactory('MaskTalisman')
+  const contract = await hre.ethers.getContractFactory('Puff')
   const Contract = await contract.deploy(
     _initBaseURI)
   await Contract.deployed()
