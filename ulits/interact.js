@@ -1,5 +1,5 @@
+import {config}  from '../dapp.config'
 const { createAlchemyWeb3 } = require('@alch/alchemy-web3')
-import { createAlchemyWeb3 } from "@alch/alchemy-web3";
 const { MerkleTree } = require('merkletreejs')
 const keccak256 = require('keccak256')
 
