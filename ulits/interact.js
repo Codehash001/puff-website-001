@@ -65,7 +65,7 @@ export const PublicMint = async (mintAmount) => {
         success: false,
         status: 'Exceeded Max Mint Amount'
       }
-}
+     } 
 
   const nonce = await web3.eth.getTransactionCount(
     window.ethereum.selectedAddress,
@@ -159,6 +159,7 @@ export const WhitelistedMint = async (mintAmount) => {
         success: false,
         status: 'Exceeded Max Mint Amount'
       }
+    }
 
   const nonce = await web3.eth.getTransactionCount(
     window.ethereum.selectedAddress,
@@ -198,4 +199,4 @@ export const WhitelistedMint = async (mintAmount) => {
       status: '😞 Ooops!:' + error.message
     }
   }
-  }
+}
