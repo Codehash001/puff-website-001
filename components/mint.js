@@ -84,7 +84,7 @@ const whitelistMintHandler = async () => {
 }
 
 const incrementMintAmount = () => {
-    if (mintAmount < config.MAX_MINT_PUBLIC) {
+    if (mintAmount < maxMintAmount) {
       setMintAmount(mintAmount + 1)
     }
   }
