@@ -9,8 +9,25 @@ import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { Chain, mainnet, polygon , polygonMumbai } from 'wagmi/chains';
 
 
+const sepolia: Chain = {
+  id: 11155111,
+  name: 'Sepolia',
+  network: 'sepolia',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'SepoliaETH',
+    symbol: 'SepoliaETH',
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://eth-sepolia.g.alchemy.com/v2/YtSHYS1BcAFu1PPEY25zMv5cj0R39f-X'],
+    },
+  },
+  testnet: true,
+};
+
 const { provider, chains } = configureChains(
-  [polygonMumbai, mainnet],
+  [sepolia, polygonMumbai, mainnet],
   [
     jsonRpcProvider({
       rpc: chain => ({ http: 'https://polygon-mumbai.g.alchemy.com/v2/shuTYtsoNXogQJNqZg-bhN4ReOXFiND4' }),
@@ -29,6 +46,7 @@ const wagmiClient = createClient({
   connectors,
   provider
 });
+
 
 export default function App({ Component, pageProps }) {
 
