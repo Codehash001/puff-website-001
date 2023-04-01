@@ -34,7 +34,7 @@ const [toggleState, setToggleState] = useState(1);
       <>
        <div className='w-screen min-h-screen flex flex-col items-center font-Archivo'>  
          <div className='w-screen h-screen bg-bg1 bg-center bg-no-repeat'>
-           <div className='flex items-center justify-between filter backdrop-blur-sm bg-black/60 h-auto w-full px-16 py-4'>
+           <div className='flex items-center justify-between filter backdrop-blur-sm bg-black/40 h-auto w-full px-16 py-4'>
            <div className='font-Kanit font-bold text-lg text-white'>Puff Logo.</div>
            <div className='flex items-center'>
              <h1 className='text-white font-[18px] mx-5 font-medium'>Home</h1>
