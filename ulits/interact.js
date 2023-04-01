@@ -244,12 +244,23 @@ export const ClaimSpecialNFT = async (mintAmount) => {
       }
      }
    
-   const currentDate = Math.floor(Date.now() / 1000)
-   console.log(currentDate)  
-   const claimDate = await nftContract.methods.getWalletSpecialNFTClaimDate(window.ethereum.selectedAddress).call()
+ 
+   const claimDateTimestamp = await nftContract.methods.getWalletSpecialNFTClaimDate(window.ethereum.selectedAddress).call()   
+   const milliseconds = claimDate * 1000
+   const dateObject = new Date(milliseconds)
+   const ClaimDateFormat = dateObject.toLocaleString()
    
-   const oneYearPassed = 1709391713 > claimDate
+   const currentDate = Math.floor(Date.now() / 1000)
+   console.log('currentDate' ,currentDate) 
+   const oneYearPassed = currentDate > claimDate
    console.log('oneYearPassed' , oneYearPassed)
+   
+   if(!oneYearPassed) {
+      return {
+        success: false,
+        status: 'You have to wait until' + ClaimDateFormat + 'to claim your special NFT'
+      }
+     }
 
   const nonce = await web3.eth.getTransactionCount(
     window.ethereum.selectedAddress,
