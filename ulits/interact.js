@@ -246,7 +246,10 @@ export const ClaimSpecialNFT = async (mintAmount) => {
    
    const currentDate = Math.floor(Date.now() / 1000)
    console.log(currentDate)  
-   const claimDate = await nftContract.methods.walletSpecialNFTClaimDate(window.ethereum.selectedAddress).call()
+   const claimDate = await nftContract.methods.getWalletSpecialNFTClaimDate(window.ethereum.selectedAddress).call()
+   
+   const oneYearPassed = currentDate > claimDate
+   console.log('oneYearPassed' , oneYearPassed)
 
   const nonce = await web3.eth.getTransactionCount(
     window.ethereum.selectedAddress,
