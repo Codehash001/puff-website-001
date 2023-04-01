@@ -99,7 +99,7 @@ const incrementMintAmount = () => {
   
   return (
   <>
-   <div className='font-Archivo backdrop-filter backdrop-blur-sm bg-opacity-80 border-2 border-gray-100'>
+   <div className='font-Archivo backdrop-filter backdrop-blur-md border-2 border-gray-100 rounded-lg'>
    
     <div className='w-auto h-auto px-6 py-4 flex flex-col justify-center items-center relative '>
     
@@ -114,7 +114,7 @@ const incrementMintAmount = () => {
 
                 <img
 		  alt="image"
-                  src="/logoCL.jpeg"
+                  src="https://media.marketrealist.com/brand-img/OtC_tLFJZ/1600x838/nft-black-1617959604349.jpg"
                   className="object-cover md:h-[240px] h-[200px] md:w-[240px] w-[200px] rounded-md border border-gray-100"
                 />
     	  </div>
