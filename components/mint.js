@@ -26,7 +26,7 @@ const [isPublicState, setIsPublicStat] = useState (false);
 const [isWlState, setIsWlState] = useState(false)
 
 const [totalMinted , setTotalMinted] = useState (0);
-const [numberMinted. setNumberMinted] = useState(0);
+const [numberMinted, setNumberMinted] = useState(0);
 
 const [status, setStatus] = useState('')
 const [success, setSuccess] = useState(false)
