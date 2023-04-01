@@ -2,7 +2,7 @@ import {config}  from '../dapp.config'
 const { createAlchemyWeb3 } = require('@alch/alchemy-web3')
 const { MerkleTree } = require('merkletreejs')
 const keccak256 = require('keccak256')
-
+const whitelist = require('../scripts/whitelist.js')
 // global BigInt
 
 const web3 = createAlchemyWeb3('https://eth-goerli.g.alchemy.com/v2/bYwv6lWEDB1KoLyivwgn_7YhZNSOkCRy')
