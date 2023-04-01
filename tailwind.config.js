@@ -29,7 +29,7 @@ module.exports = {
       },
       backgroundImage:
         {
-          'bg1' : 'url("/PuffWallpaper5.png")'
+          'bg1' : 'url("/PuffWallpaper1.png")'
         }
         }
   },
