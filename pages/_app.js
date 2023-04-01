@@ -6,39 +6,21 @@ import { useEffect } from 'react';
 import { getDefaultWallets, RainbowKitProvider, ConnectButton } from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient, WagmiConfig, useAccount } from "wagmi";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
-import { Chain, mainnet, polygon , polygonMumbai } from 'wagmi/chains';
+import { Chain, mainnet, goerli} from 'wagmi/chains';
 
-
-const sepoliaChain = Chain({
-  id: 11155111,
-  name: 'Sepolia',
-  network: 'sepolia',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'SepoliaETH',
-    symbol: 'SepoliaETH',
-  },
-  rpcUrls: {
-    default: {
-      http: ['https://eth-sepolia.g.alchemy.com/v2/YtSHYS1BcAFu1PPEY25zMv5cj0R39f-X'],
-    },
-  },
-  testnet: true,
-  }
-);
 
 const { provider, chains } = configureChains(
-  [sepoliaChain, polygonMumbai, mainnet],
+  [goerli, mainnet],
   [
     jsonRpcProvider({
-      rpc: chain => ({ http: 'https://polygon-mumbai.g.alchemy.com/v2/shuTYtsoNXogQJNqZg-bhN4ReOXFiND4' }),
+      rpc: chain => ({ http: 'https://eth-goerli.g.alchemy.com/v2/bYwv6lWEDB1KoLyivwgn_7YhZNSOkCRy' }),
     }),
   ]
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "My RainbowKit App",
-  jsonRpcUrl: 'https://polygon-mumbai.g.alchemy.com/v2/shuTYtsoNXogQJNqZg-bhN4ReOXFiND4',
+  appName: "Baggies",
+  jsonRpcUrl: 'https://eth-goerli.g.alchemy.com/v2/bYwv6lWEDB1KoLyivwgn_7YhZNSOkCRy',
   chains
 });
 
