@@ -43,7 +43,7 @@ const [toggleState, setToggleState] = useState(1);
            </div>
              
            </div>
-           <div className= "flex items-center justify-center w-full h-full filter bacdrop-blur-sm bg-gray-600/70">
+           <div className= "flex justify-center w-full h-full">
              <Mint/>
            </div>
          </div>        
