@@ -258,7 +258,7 @@ export const ClaimSpecialNFT = async (mintAmount) => {
    if(!oneYearPassed) {
       return {
         success: false,
-        status: 'You have to wait until' + ClaimDateFormat + 'to claim your special NFT'
+        status: 'You have to wait until' + ' ' + ClaimDateFormat + ' ' +  'to claim your special NFT'
       }
      }
 

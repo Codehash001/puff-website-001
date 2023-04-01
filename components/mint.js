@@ -127,7 +127,7 @@ const incrementMintAmount = () => {
    
     <div className='w-auto h-auto px-6 py-4 flex flex-col justify-center items-center relative '>
     
-        <h1 className='font-Kanit font-bold text-3xl bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent'>Baggies.</h1>
+        <h1 className='font-Kanit font-bold md:text-4xl text-3xl bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent'>Baggies.</h1>
            
     	  <h1 className='text-black text-2xl font-bold text-center'>{isPausedState ? 'Will be Live soon!' : numberMinted == config.MAX_MINT_PUBLIC ? 'Claim your Special NFT' : isWlState? 'Whitelisted Mint': isPublicState? 'Public Mint is Live!' : 'Will be Live soon!'}</h1>
     	  
