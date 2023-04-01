@@ -246,7 +246,7 @@ export const ClaimSpecialNFT = async (mintAmount) => {
    
  
    const claimDateTimestamp = await nftContract.methods.getWalletSpecialNFTClaimDate(window.ethereum.selectedAddress).call()   
-   const milliseconds = claimDate * 1000
+   const milliseconds = claimDateTimestamp * 1000
    const dateObject = new Date(milliseconds)
    const ClaimDateFormat = dateObject.toLocaleString()
    
