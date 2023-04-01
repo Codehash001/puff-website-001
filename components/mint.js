@@ -99,7 +99,7 @@ const incrementMintAmount = () => {
   
   return (
   <>
-   <div className='font-Archivo filter backdrop-blur-sm bg-gray-300/30'>
+   <div className='font-Archivo bg-gray-800 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-40 border-2 border-gray-100 backdrop-saturate-150'>
    
     <div className='w-auto h-auto px-6 py-4 flex flex-col justify-center items-center relative '>
     
