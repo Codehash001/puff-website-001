@@ -9,7 +9,7 @@ import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { Chain, mainnet, polygon , polygonMumbai } from 'wagmi/chains';
 
 
-const sepoliaChain = Chain {
+const sepoliaChain = Chain({
   id: 11155111,
   name: 'Sepolia',
   network: 'sepolia',
@@ -24,7 +24,8 @@ const sepoliaChain = Chain {
     },
   },
   testnet: true,
-};
+  }
+);
 
 const { provider, chains } = configureChains(
   [sepoliaChain, polygonMumbai, mainnet],
