@@ -101,16 +101,14 @@ const incrementMintAmount = () => {
   <>
    <div className='font-Archivo '>
    
-    <div className='w-full h-full md:px-20 px-4 md:py-4 py-2 flex flex-col justify-center items-center relative'>
+    <div className='w-full h-full md:px-20 py-2 flex flex-col justify-center items-center relative'>
     
     	  <h1 className='text-black text-[40px] font-bold text-center'>{isPublicState? 'Mint is Live!' : isPausedState ? 'Will be Live soon!' : 'Will be Live soon!'}</h1>
-    	  
-    	  <ConnectButton />
     	  
     	  <div className='w-auto flex justify-center items-center relative mt-6'>
                 <div className="z-10 absolute top-2 left-2 opacity-80 filter backdrop-blur-lg text-base px-2 py-2 bg-black border rounded-md flex items-center justify-center text-white font-semibold">
                   <p className='text-sm'>
-                    {totalMinted} / 335                    
+                    {totalMinted} / 5000                    
                   </p>
                 </div>
 
