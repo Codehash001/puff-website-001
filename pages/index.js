@@ -8,7 +8,7 @@ export default function Home() {
     <div>
       <Head>
         <title>MaskTalisman</title>
-        <meta name="Description" content="MaskTalisman" />
+        <meta name="Description" content="Baggies" />
         <link rel="icon" href="/Logo.jpeg" />
       </Head>
       <Base/>

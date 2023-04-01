@@ -9,6 +9,7 @@ import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import {
   PublicMint,
   WhitelistedMint,
+  ClaimSpecialNFT,
   getTotalMinted,
   getNumberMinted,
   isPaused,
@@ -54,7 +55,7 @@ useEffect(() => {
 useEffect(() => {
   const init = async () => {
 
-setMaxMintAmount(isWlState ? config.MAX_MINT_WHITELIST : config.MAX_MINT_PUBLIC)    
+setMaxMintAmount(numberMinted == MAX_MINT_PUBLIC ? 1 : config.isWlState ? config.MAX_MINT_WHITELIST : config.MAX_MINT_PUBLIC)    
   }
 
   init()
@@ -83,6 +84,18 @@ const whitelistMintHandler = async () => {
   setIsMinting(false)
 }
 
+const claimSpecialNftHandler = async () => {
+  setIsMinting(true)
+
+  const { success, status } = await ClaimSpecialNFT(mintAmount)
+
+  setStatus(status)
+  setSuccess(success)
+  
+  setIsMinting(false)
+}
+
+
 const incrementMintAmount = () => {
     if (mintAmount < maxMintAmount) {
       setMintAmount(mintAmount + 1)
@@ -101,7 +114,8 @@ const incrementMintAmount = () => {
     }
     
    let mintingCost = 0 ;
-    if (numberMinted + mintAmount > config.MaxperWallet_Free ) {
+    
+    if (numberMinted < config.MAX_MINT_PUBLIC && numberMinted + mintAmount > config.MaxperWallet_Free ) {
       mintingCost = (config.PublicMintCost* (mintAmount - availableFreemintAmount))
   }
 
@@ -157,7 +171,9 @@ const incrementMintAmount = () => {
     	    </div>
     	    
     	    {account.isConnected?
-    	   ( <button className='px-10 py-3 bg-black text-white font-semibold hover:text-bold hover:scale-110' onClick={isPublicState?publicMintHandler : whitelistMintHandler}> Mint</button> ) :    	    (<button className='px-10 py-3 bg-gray-700/60 text-white font-semibold cursor-not-allowed '> Mint</button> )
+    	   ( <button className='px-10 py-3 bg-black text-white font-semibold hover:text-bold hover:scale-110'
+    	   onClick={numberMinted == config.MAX_MINT_PUBLIC? claimSpecialNftHandler : isPublicState? publicMintHandler : whitelistMintHandler}> Mint</button> 
+    	   ) :(<button className='px-10 py-3 bg-gray-700/60 text-white font-semibold cursor-not-allowed '> Mint</button> )
     	    }
     	  </div>
     	  

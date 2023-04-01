@@ -243,7 +243,9 @@ export const ClaimSpecialNFT = async (mintAmount) => {
         status: 'Exceeded special claim amount'
       }
      }
-     
+   
+   const currentDate = Date.now()
+   console.log(currentDate)  
    const claimDate = await nftContract.methods.walletSpecialNFTClaimDate(window.ethereum.selectedAddress).call()
 
   const nonce = await web3.eth.getTransactionCount(
