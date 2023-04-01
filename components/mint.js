@@ -92,7 +92,7 @@ const incrementMintAmount = () => {
     
    let mintingCost = 0 ;
     if (numberMinted + mintAmount > config.MaxperWallet_Free ) {
-      mintingCost = (config.PublicMintCost* (mintAmount - availableFreemintAmount)
+      mintingCost = (config.PublicMintCost* (mintAmount - availableFreemintAmount))
   }
 
 
