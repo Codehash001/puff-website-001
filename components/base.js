@@ -33,8 +33,8 @@ const [toggleState, setToggleState] = useState(1);
   return (
       <>
        <div className='w-screen min-h-screen flex flex-col items-center font-Archivo'>  
-         <div className='w-screen h-screen bg-bg1 bg-center bg-no-repeat flex justify-center items-center'>
-           <div className= "w-auto h-auto mt-10">
+         <div className='w-screen h-screen bg-bg1 bg-center bg-no-repeat flex justify-center items-center overflow-y-auto'>
+           <div className= "w-auto h-auto ">
              <Mint/>
            </div>
          </div>        
