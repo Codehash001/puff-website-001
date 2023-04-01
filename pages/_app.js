@@ -9,7 +9,7 @@ import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { Chain, mainnet, polygon , polygonMumbai } from 'wagmi/chains';
 
 
-const Chain = sepolia {
+const sepoliaChain: Chain {
   id: 11155111,
   name: 'Sepolia',
   network: 'sepolia',
@@ -27,7 +27,7 @@ const Chain = sepolia {
 };
 
 const { provider, chains } = configureChains(
-  [sepolia, polygonMumbai, mainnet],
+  [sepoliaChain, polygonMumbai, mainnet],
   [
     jsonRpcProvider({
       rpc: chain => ({ http: 'https://polygon-mumbai.g.alchemy.com/v2/shuTYtsoNXogQJNqZg-bhN4ReOXFiND4' }),
