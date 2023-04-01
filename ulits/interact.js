@@ -6,7 +6,7 @@ const keccak256 = require('keccak256')
 // global BigInt
 
 const web3 = createAlchemyWeb3('https://eth-sepolia.g.alchemy.com/v2/YtSHYS1BcAFu1PPEY25zMv5cj0R39f-X')
-const contract = require('../artifacts/contracts/Puff.sol/Puff.json')
+const contract = require('../artifacts/contracts/Baggies.sol/Baggies.json')
 const nftContract = new web3.eth.Contract(contract.abi, config.contractAddress)
 
 
@@ -23,10 +23,21 @@ export const isPublicMintLive = async () => {
   return isPublicMintState
 }
 
+export const isWhitelistMinLive = async () => {
+  const isWhitelistMintState = await nftContract.methods.WhitelistMint_Live().call()
+  return isWhitelistMintState
+}
+
 export const getTotalMinted = async () => {
   const totalMinted = await nftContract.methods.totalSupply().call()
   return totalMinted
 }
+
+export const getNumberMinted = async () => {
+  const numberMinted = await nftContract.methods.numberMinted().call()
+  return numberMinted
+}
+
 
   
   //Set up Public Mint------------------------------------------------------------------------------------>
@@ -60,8 +71,15 @@ export const PublicMint = async (mintAmount) => {
     window.ethereum.selectedAddress,
     'latest'
   )
-  
-  const mintingCost = ((config.PublicMintCost*mintingAmount).toFixed(18))
+  let availableFreemintAmount = 0
+    if (NumberMinted < config.MaxperWallet_Free) {
+  	availableFreemintAmount = (config.MaxperWallet_Free - NumberMinted)
+    }
+    
+   let mintingCost = 0 ;
+    if (NumberMinted + mintingAmount > config.MaxperWallet_Free ) {
+      mintingCost = ((config.PublicMintCost* (mintingAmount - availableFreemintAmount)).toFixed(18))
+  }
 
   // Set up our Ethereum transaction
 
@@ -87,7 +105,7 @@ export const PublicMint = async (mintAmount) => {
     return {
       success: true,
       status: (
-        <a href={`https://goerli.etherscan.io/tx/${txHash}`} target="_blank">
+        <a href={`https://sepolia.etherscan.io/tx/${txHash}`} target="_blank">
           <p>✅ Check out your transaction on Etherscan ✅</p>
         </a>
       )
@@ -99,3 +117,85 @@ export const PublicMint = async (mintAmount) => {
     }
   }
 }
+
+//Set up Whitelist Mint------------------------------------------------------------------------------------>
+
+export const WhitelistedMint = async (mintAmount) => {
+  if (!window.ethereum.selectedAddress) {
+    return {
+      success: false,
+      status: 'To be able to mint, you need to connect your wallet'
+    }
+  }
+  // Calculate merkle root from the whitelist array
+  const leafNodes = whitelist.map((addr) => keccak256(addr))
+  const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
+  const root = merkleTree.getRoot()
+
+  const leaf = keccak256(window.ethereum.selectedAddress)
+  const proof = merkleTree.getHexProof(leaf)
+
+  // Verify Merkle Proof
+  const isValid = merkleTree.verify(proof, leaf, root)
+
+  if (!isValid) { 
+    return {
+      success: false,
+      status: '❌ Invalid Merkle Proof - You are not whitelisted'
+    }
+  }
+  
+  const mintingAmount = Number(mintAmount)
+
+
+  let MaxWhitelist = Number(config.MAX_MINT_WHITELIST)
+  let numberMinted = Number(await nftContract.methods.numberMinted(window.ethereum.selectedAddress).call())
+  let MintableAmount = Number(MaxWhitelist - numberMinted)
+  
+  const ExceededMaxMint = MintableAmount < mintingAmount
+  console.log('ExceededMaxMint',ExceededMaxMint)
+    if (ExceededMaxMint) {
+      return {
+        success: false,
+        status: 'Exceeded Max Mint Amount'
+      }
+
+  const nonce = await web3.eth.getTransactionCount(
+    window.ethereum.selectedAddress,
+    'latest'
+  )
+ 
+
+  // Set up our Ethereum transaction
+
+  const tx = {
+    to: config.contractAddress,
+    from: window.ethereum.selectedAddress,
+    gas: String(25000 * mintAmount),
+    data: nftContract.methods
+      .WhitelistedMint(mintingAmount, proof)
+      .encodeABI(),
+    nonce: nonce.toString(16)
+  }
+
+  try {
+    const txHash = await window.ethereum.request({
+      method: 'eth_sendTransaction',
+      params: [tx]
+    })
+
+    return {
+      success: true,
+      status: (
+        <a href={`https://sepolia.etherscan.io/tx/${txHash}`} target="_blank">
+          <p>✅ Check out your transaction on Etherscan ✅</p>
+        </a>
+      )
+    }
+  } catch (error) {
+    return {
+      success: false,
+      status: '😞 Ooops!:' + error.message
+    }
+  }
+  }

@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "operator-filter-registry/src/DefaultOperatorFilterer.sol";
 
-contract Puff is ERC721A, Ownable, ReentrancyGuard, DefaultOperatorFilterer {
+contract Baggies is ERC721A, Ownable, ReentrancyGuard, DefaultOperatorFilterer {
   using Strings for uint256;
 
   string public baseURI;
@@ -17,21 +17,25 @@ contract Puff is ERC721A, Ownable, ReentrancyGuard, DefaultOperatorFilterer {
 
   uint256 public PublicMintCost = 0.01 ether;
 
-  uint256 public maxSupply = 335;
+  uint256 public maxSupply = 5000;
   uint256 public MaxperWallet_PublicMint = 4;
-    uint256 public MaxperWallet_SpecialMint = 1;
+  uint256 public MaxperWallet_Free = 2;
+  uint256 public MaxperWallet_SpecialMint = 1;
+
+  
+  bytes32 public merkleRoot_WL = 0;
  
   bool public paused = false; 
   bool public revealed = true;
-  bool public PublicMint_Live = true;
+  bool public PublicMint_Live = false;
+  bool public WhitelistMint_Live = true;
   
-   mapping(address => uint256) public walletMintCounts;
-   mapping(address => uint256) public walletMaxMintDate;
+   mapping(address => uint256) public walletMaxMintedDate;
    mapping(address => uint256) public walletSpecialNFTClaimDate;
 
   constructor(
     string memory _initBaseURI
-  ) ERC721A("Puff", "Puff") {
+  ) ERC721A("Baggies", "BGGS") {
     setBaseURI(_initBaseURI);
     
   }
@@ -79,25 +83,44 @@ contract Puff is ERC721A, Ownable, ReentrancyGuard, DefaultOperatorFilterer {
     {
         super.safeTransferFrom(from, to, tokenId, data);
     }
+/// @dev Whitelisted Mint
 
+   function WhitelistedMint(uint256 tokens, bytes32[] calldata merkleProof) public nonReentrant {
+    require(!paused, "oops contract is paused");
+    require(WhitelistMint_Live, "Sale Hasn't started yet");
+    require(MerkleProof.verify(merkleProof, merkleRoot_WL, keccak256(abi.encodePacked(msg.sender))), " You aren't whitelisted");
+    uint256 supply = totalSupply();
+    require(tokens > 0, "need to mint at least 1 NFT");
+    require(supply + tokens <= maxSupply, "We Soldout");
+    require(_numberMinted(_msgSender()) + tokens <= MaxperWallet_Free, " Max NFTs Per Wallet exceeded");
 
-/// @dev  Public Mint
+      _safeMint(_msgSender(), tokens);
+    
+  }
+
+/// @dev Public Mint
   function PublicMint(uint256 tokens) public payable nonReentrant {
     require(!paused, "oops contract is paused");
     require(PublicMint_Live, "Sale Hasn't started yet");
     uint256 supply = totalSupply();
     require(tokens > 0, "need to mint at least 1 NFT");
     require(supply + tokens <= maxSupply, "We Soldout");
-    require(_numberMinted(_msgSender()) + tokens <= MaxperWallet_PublicMint , " Max NFTs Per Wallet exceeded");
-    require(msg.value >= PublicMintCost * tokens, "insufficient funds");
-
-
+    require(_numberMinted(msg.sender) + tokens <= MaxperWallet_PublicMint , " Max NFTs Per Wallet exceeded");
+    
+    uint256 availableFreemintAmount = 0;
+    if(_numberMinted(msg.sender) < MaxperWallet_Free ){
+     availableFreemintAmount = (MaxperWallet_Free - _numberMinted(msg.sender));
+    }
+    
+    if(_numberMinted(msg.sender) + tokens > MaxperWallet_Free){
+      require(msg.value >= PublicMintCost * ( tokens - availableFreemintAmount ), "insufficient funds");
+    }
+    
       _safeMint(_msgSender(), tokens);
-      walletMintCounts[msg.sender]++;
 
-        if (walletMintCounts[msg.sender] == MaxperWallet_PublicMint) {
-            walletMaxMintDate[msg.sender] = block.timestamp;
-            walletSpecialNFTClaimDate[msg.sender] = block.timestamp + 31536000 ;
+        if (_numberMinted(msg.sender) == MaxperWallet_PublicMint) {
+            walletMaxMintedDate[msg.sender] = block.timestamp;
+            walletSpecialNFTClaimDate[msg.sender] = walletMaxMintedDate[msg.sender] + 31536000 ;
         }
     
   }
@@ -110,7 +133,7 @@ contract Puff is ERC721A, Ownable, ReentrancyGuard, DefaultOperatorFilterer {
         uint256 supply = totalSupply();
         require(tokens > 0, "need to mint at least 1 NFT");
         require(supply + tokens <= maxSupply, "We Soldout");
-        require(_numberMinted(_msgSender()) + tokens <= MaxperWallet_PublicMint + MaxperWallet_SpecialMint , " Max NFTs Per Wallet exceeded");
+        require(_numberMinted(msg.sender) + tokens <= MaxperWallet_PublicMint + MaxperWallet_SpecialMint , " Max NFTs Per Wallet exceeded");
 
         _safeMint(msg.sender, tokens);
     }
@@ -165,18 +188,26 @@ contract Puff is ERC721A, Ownable, ReentrancyGuard, DefaultOperatorFilterer {
     MaxperWallet_PublicMint = _limit;
   }
   
+  function setMaxperWallet_Free(uint256 _limit) public onlyOwner {
+    MaxperWallet_Free = _limit;
+  }
+  
    function setMaxperWallet_SpecialMint(uint256 _limit) public onlyOwner {
     MaxperWallet_SpecialMint = _limit;
   }
+  
 
   function setPublicMintCost(uint256 _newCost) public onlyOwner {
     PublicMintCost = _newCost;
   }
 
-
-    function setMaxsupply(uint256 _newsupply) public onlyOwner {
+  function setMaxsupply(uint256 _newsupply) public onlyOwner {
     maxSupply = _newsupply;
   }
+  
+  function setMerkleRoot_WL(bytes32 _merkleRoot) external onlyOwner {
+        merkleRoot_WL = _merkleRoot;
+    }
 
   function setBaseURI(string memory _newBaseURI) public onlyOwner {
     baseURI = _newBaseURI;
@@ -197,7 +228,10 @@ contract Puff is ERC721A, Ownable, ReentrancyGuard, DefaultOperatorFilterer {
   function toggle_PublicMint_Live(bool _state) external onlyOwner {
         PublicMint_Live = _state;
     }
-
+  
+  function toggle_WhitelistMint_Live(bool _state) external onlyOwner {
+        WhitelistMint_Live = _state;
+    }
  
   function withdraw() public payable onlyOwner nonReentrant {
     (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");

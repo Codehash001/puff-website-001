@@ -5,7 +5,7 @@ const _initBaseURI='ipfs://ipfsurl/'
 async function main() {
 
   // Deploy the contract
-  const contract = await hre.ethers.getContractFactory('Puff')
+  const contract = await hre.ethers.getContractFactory('Baggies')
   const Contract = await contract.deploy(
     _initBaseURI)
   await Contract.deployed()

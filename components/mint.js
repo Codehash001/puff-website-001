@@ -8,9 +8,12 @@ import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 
 import {
   PublicMint,
+  WhitelistedMint,
   getTotalMinted,
+  getNumberMinted,
   isPaused,
-  isPublicMintLive
+  isPublicMintLive,
+  isWhitelistMinLive
 } from '../ulits/interact';
 import {config} from '../dapp.config'
 
@@ -20,8 +23,10 @@ const account = useAccount()
 
 const [isPausedState , setIsPauseState] = useState (false);
 const [isPublicState, setIsPublicStat] = useState (false);
+const [isWlState. setIsWlState] = useState(false)
 
 const [totalMinted , setTotalMinted] = useState (0);
+const [numberMinted. setNumberMinted] = useState(0);
 
 const [status, setStatus] = useState('')
 const [success, setSuccess] = useState(false)
@@ -33,9 +38,11 @@ const [cost , setCost] = useState(0)
 useEffect(() => {
   const init = async () => {
     setTotalMinted(await getTotalMinted())
+    setNumberMinted(await getNumberMinted())
 
     setIsPauseState(await isPaused())
     setIsPublicStat(await isPublicMintLive())
+    setIsWlState(await isWhitelistMinLive())
     
     
   }
@@ -43,18 +50,22 @@ useEffect(() => {
   init()
 }, []);
 
-useEffect(() => {
-  const init = async () => {
-    setCost(config.PublicMintCost)
-  }
-
-  init()
-}, );
 
 const publicMintHandler = async () => {
   setIsMinting(true)
 
   const { success, status } = await PublicMint(mintAmount)
+
+  setStatus(status)
+  setSuccess(success)
+  
+  setIsMinting(false)
+}
+
+const whitelistMintHandler = async () => {
+  setIsMinting(true)
+
+  const { success, status } = await WhitelistedMint(mintAmount)
 
   setStatus(status)
   setSuccess(success)
@@ -73,6 +84,17 @@ const incrementMintAmount = () => {
       setMintAmount(mintAmount - 1)
     }
   }
+  
+    let availableFreemintAmount = 0
+    if (numberMinted < config.MaxperWallet_Free) {
+  	availableFreemintAmount = (config.MaxperWallet_Free - numberMinted)
+    }
+    
+   let mintingCost = 0 ;
+    if (numberMinted + mintAmount > config.MaxperWallet_Free ) {
+      mintingCost = (config.PublicMintCost* (mintAmount - availableFreemintAmount)
+  }
+
 
   
   return (
@@ -103,9 +125,9 @@ const incrementMintAmount = () => {
     	  <p>Total</p>
     	    <div className="flex items-center space-x-3">
     	    <p>
-    	     {Number.parseFloat(cost*mintAmount).toFixed(
-                          2
-                        )}{' '} MATIC
+    	     {Number.parseFloat(mintingCost).toFixed(
+                          4
+                        )}{' '} ETH
     	    </p>
     	    <p>+ GAS</p>
     	    </div>

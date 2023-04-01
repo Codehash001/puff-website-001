@@ -3,9 +3,11 @@ const RPC_URL = process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL
 const config = {
   title: 'Dapp',
   description: 'test minting Dapp',
-  contractAddress: '0xf280Ec7FCC1A0298Ded98abBcEfa6aBF9ec66BaD', //polygon contract
-  MAX_MINT_PUBLIC: 20,
-  PublicMintCost: 9.99
+  contractAddress: '0x9d98c96d58d5b4a4B73b1458d7ef05F57eb33c47', //sepolia testnet
+  MAX_MINT_PUBLIC: 4,
+  MaxperWallet_Free:2,
+  MAX_MINT_WHITELIST:2,
+  PublicMintCost: 0.01
 }
 
 const onboardOptions = {
