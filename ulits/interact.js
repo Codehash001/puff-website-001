@@ -244,7 +244,7 @@ export const ClaimSpecialNFT = async (mintAmount) => {
       }
      }
    
-   const currentDate = Date.now()/1000
+   const currentDate = Math.floor(Date.now() / 1000)
    console.log(currentDate)  
    const claimDate = await nftContract.methods.walletSpecialNFTClaimDate(window.ethereum.selectedAddress).call()
 
