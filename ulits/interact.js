@@ -34,8 +34,13 @@ export const getTotalMinted = async () => {
 }
 
 export const getNumberMinted = async () => {
-  const numberMinted = await nftContract.methods.numberMinted().call()
+  const numberMinted = await nftContract.methods.numberMinted(window.ethereum.selectedAddress).call()
   return numberMinted
+}
+
+export const getClaimDate = async () => {
+  const claimDate = await nftContract.methods.walletSpecialNFTClaimDate(window.ethereum.selectedAddress).call()
+  return claimDate
 }
 
 
@@ -105,7 +110,7 @@ export const PublicMint = async (mintAmount) => {
     return {
       success: true,
       status: (
-        <a href={`https://sepolia.etherscan.io/tx/${txHash}`} target="_blank">
+        <a href={`https://etherscan.io/tx/${txHash}`} target="_blank">
           <p>✅ Check out your transaction on Etherscan ✅</p>
         </a>
       )
@@ -188,7 +193,86 @@ export const WhitelistedMint = async (mintAmount) => {
     return {
       success: true,
       status: (
-        <a href={`https://sepolia.etherscan.io/tx/${txHash}`} target="_blank">
+        <a href={`https://etherscan.io/tx/${txHash}`} target="_blank">
+          <p>✅ Check out your transaction on Etherscan ✅</p>
+        </a>
+      )
+    }
+  } catch (error) {
+    return {
+      success: false,
+      status: '😞 Ooops!:' + error.message
+    }
+  }
+}
+
+  //Set up Special NFT Mint------------------------------------------------------------------------------------>
+
+export const ClaimSpecialNFT = async (mintAmount) => {
+  if (!window.ethereum.selectedAddress) {
+    return {
+      success: false,
+      status: 'To be able to mint, you need to connect your wallet'
+    }
+  }
+
+
+  const mintingAmount = Number(mintAmount)
+  
+  const NumberMinted = Number(await nftContract.methods.numberMinted(window.ethereum.selectedAddress).call())
+    if (NumberMinted < config.MAX_MINT_PUBLIC) {
+      return {
+        success: false,
+        status: 'You are not eligible for claim special nft'
+      }
+     }
+     
+     if (NumberMinted + mintingAmount > config.MAX_MINT_PUBLIC + 1) {
+      return {
+        success: false,
+        status: 'Exceeded special claim amount'
+      }
+     } 
+  const MintableAmount = 1
+  
+  const ExceededMaxMint = MintableAmount < mintingAmount
+  console.log('ExceededMaxMint',ExceededMaxMint)
+    if (ExceededMaxMint) {
+      return {
+        success: false,
+        status: 'Exceeded special claim amount'
+      }
+     }
+     
+   const claimDate = await nftContract.methods.walletSpecialNFTClaimDate(window.ethereum.selectedAddress).call()
+
+  const nonce = await web3.eth.getTransactionCount(
+    window.ethereum.selectedAddress,
+    'latest'
+  )
+
+  // Set up our Ethereum transaction
+
+  const tx = {
+    to: config.contractAddress,
+    from: window.ethereum.selectedAddress,
+    gas: String(25000 * mintAmount),
+    data: nftContract.methods
+      .mintSpecialNFT(mintingAmount)
+      .encodeABI(),
+    nonce: nonce.toString(16)
+  }
+
+  try {
+    const txHash = await window.ethereum.request({
+      method: 'eth_sendTransaction',
+      params: [tx]
+    })
+
+    return {
+      success: true,
+      status: (
+        <a href={`https://etherscan.io/tx/${txHash}`} target="_blank">
           <p>✅ Check out your transaction on Etherscan ✅</p>
         </a>
       )

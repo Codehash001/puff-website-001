@@ -34,6 +34,7 @@ const [success, setSuccess] = useState(false)
 const [mintAmount, setMintAmount] = useState(1)
 const [isMinting, setIsMinting] = useState(false)
 const [cost , setCost] = useState(0)
+const [maxMintAmount, setMaxMintAmount] = useState(0)
 
 useEffect(() => {
   const init = async () => {
@@ -49,6 +50,15 @@ useEffect(() => {
 
   init()
 }, []);
+
+useEffect(() => {
+  const init = async () => {
+
+setMaxMintAmount(isWlState ? config.MAX_MINT_WHITELIST : config.MAX_MINT_PUBLIC)    
+  }
+
+  init()
+});
 
 
 const publicMintHandler = async () => {
@@ -105,7 +115,7 @@ const incrementMintAmount = () => {
     
         <h1 className='font-Kanit font-bold text-3xl bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent'>Baggies.</h1>
            
-    	  <h1 className='text-black text-2xl font-bold text-center'>{isPublicState? 'Mint is Live!' : isPausedState ? 'Will be Live soon!' : 'Will be Live soon!'}</h1>
+    	  <h1 className='text-black text-2xl font-bold text-center'>{isPausedState ? 'Will be Live soon!' : numberMinted == config.MAX_MINT_PUBLIC ? 'Claim your Special NFT' : isWlState? 'Whitelisted Mint': isPublicState? 'Publiuc Mint is Live!' : 'Will be Live soon!'}</h1>
     	  
     	      <div className='mt-4'><ConnectButton /></div>             
     	  
@@ -147,7 +157,7 @@ const incrementMintAmount = () => {
     	    </div>
     	    
     	    {account.isConnected?
-    	   ( <button className='px-10 py-3 bg-black text-white font-semibold hover:text-bold hover:scale-110' onClick={publicMintHandler}> Mint</button> ) :    	    (<button className='px-10 py-3 bg-gray-700/60 text-white font-semibold cursor-not-allowed '> Mint</button> )
+    	   ( <button className='px-10 py-3 bg-black text-white font-semibold hover:text-bold hover:scale-110' onClick={isPausedState?publicMintHandler : isWlState ? whitelistMintHandler}> Mint</button> ) :    	    (<button className='px-10 py-3 bg-gray-700/60 text-white font-semibold cursor-not-allowed '> Mint</button> )
     	    }
     	  </div>
     	  
