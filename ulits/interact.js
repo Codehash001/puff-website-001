@@ -250,9 +250,9 @@ export const ClaimSpecialNFT = async (mintAmount) => {
    const dateObject = new Date(milliseconds)
    const ClaimDateFormat = dateObject.toLocaleString()
    
-   const currentDate = Math.floor(Date.now() / 1000)
-   console.log('currentDate' ,currentDate) 
-   const oneYearPassed = currentDate > claimDate
+   const currentDateTimeStamp = Math.floor(Date.now() / 1000)
+   console.log('currentDate' ,currentDateTimeStamp) 
+   const oneYearPassed = currentDateTimeStamp > claimDateTimestamp
    console.log('oneYearPassed' , oneYearPassed)
    
    if(!oneYearPassed) {
