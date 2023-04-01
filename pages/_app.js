@@ -9,7 +9,7 @@ import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { Chain, mainnet, polygon , polygonMumbai } from 'wagmi/chains';
 
 
-const sepoliaChain: Chain {
+let sepoliaChain: Chain = {
   id: 11155111,
   name: 'Sepolia',
   network: 'sepolia',
