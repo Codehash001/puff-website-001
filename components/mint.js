@@ -23,7 +23,7 @@ const account = useAccount()
 
 const [isPausedState , setIsPauseState] = useState (false);
 const [isPublicState, setIsPublicStat] = useState (false);
-const [isWlState. setIsWlState] = useState(false)
+const [isWlState, setIsWlState] = useState(false)
 
 const [totalMinted , setTotalMinted] = useState (0);
 const [numberMinted. setNumberMinted] = useState(0);
