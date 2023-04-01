@@ -157,7 +157,7 @@ const incrementMintAmount = () => {
     	    </div>
     	    
     	    {account.isConnected?
-    	   ( <button className='px-10 py-3 bg-black text-white font-semibold hover:text-bold hover:scale-110' onClick={isPausedState?publicMintHandler : isWlState ? whitelistMintHandler}> Mint</button> ) :    	    (<button className='px-10 py-3 bg-gray-700/60 text-white font-semibold cursor-not-allowed '> Mint</button> )
+    	   ( <button className='px-10 py-3 bg-black text-white font-semibold hover:text-bold hover:scale-110' onClick={isPausedState?publicMintHandler : whitelistMintHandler}> Mint</button> ) :    	    (<button className='px-10 py-3 bg-gray-700/60 text-white font-semibold cursor-not-allowed '> Mint</button> )
     	    }
     	  </div>
     	  
