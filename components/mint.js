@@ -55,7 +55,7 @@ useEffect(() => {
 useEffect(() => {
   const init = async () => {
 
-setMaxMintAmount(numberMinted == MAX_MINT_PUBLIC ? 1 : config.isWlState ? config.MAX_MINT_WHITELIST : config.MAX_MINT_PUBLIC)    
+setMaxMintAmount(numberMinted == config.MAX_MINT_PUBLIC ? 1 : config.isWlState ? config.MAX_MINT_WHITELIST : config.MAX_MINT_PUBLIC)    
   }
 
   init()
